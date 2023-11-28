@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::prefix('auth')->middleware(['guest'])->controller(AuthController::class)->group(function () {
+    Route::get('login', 'login')->name('login');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', [MessageController::class, 'index'])->name('messages');
 });
